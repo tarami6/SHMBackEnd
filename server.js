@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
+const port = process.env.PORT || 3000;
 
 dotenv.config()
 
@@ -18,6 +19,6 @@ const htmlBuilder = require('./routes/htmlBuilder');
 app.use('/api/user', authRoute)
 app.use('/api/html', htmlBuilder)
 
-app.listen(4000, () => {
+app.listen(port, () => {
     console.log('server is up and running')
 })
