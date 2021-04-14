@@ -2,7 +2,10 @@ const express = require('express')
 const app = express()
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4001;
+var cors = require('cors')
+
+
 
 dotenv.config()
 
@@ -12,6 +15,7 @@ mongoose.connect(
         useUnifiedTopology: true }).then(() => console.log("Db connected"))
 
 app.use(express.json())    
+app.use(cors()) //cors added
 
 const authRoute = require('./routes/auth');
 const htmlBuilder = require('./routes/htmlBuilder');
