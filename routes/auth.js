@@ -35,16 +35,16 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
+    console.log('req', req.body)
     const { error } = loginValidation(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(201).send({error: error.details[0].message});
     }
 
     //Cheking if user exists
     const user = await User.findOne({ email: req.body.email })
-    console.log('user', user)
     if (!user) {
-        return res.status(400).send("Email is wrong");
+        return res.status(201).send({error:"Email is wrong"});
     }
      
     // Hash The Password
@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
 
     //Create and assign
     const token = jwt.sign({id: user._id}, process.env.TOKEN_SECRET)
-    res.header('auth-token', token).send(token)
+    res.header('auth-token', token).send({token})
 })
 
 module.exports = router
