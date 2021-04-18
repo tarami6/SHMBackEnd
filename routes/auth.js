@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
         await user.save()
         res.send({ user: user.id })
     } catch (err) {
-        res.status(400).send(err)
+        rres.status(500).json({error: err})
     }
 })
 
@@ -38,24 +38,26 @@ router.post('/login', async (req, res) => {
     console.log('req', req.body)
     const { error } = loginValidation(req.body);
     if (error) {
-        return res.status(201).send({error: error.details[0].message});
+        return res.status(201).send({ error: error.details[0].message });
     }
+    try {
+        //Cheking if user exists
+        const user = await User.findOne({ email: req.body.email })
+        if (!user) {
+            return res.status(201).send({ error: "Email is wrong" });
+        }
 
-    //Cheking if user exists
-    const user = await User.findOne({ email: req.body.email })
-    if (!user) {
-        return res.status(201).send({error:"Email is wrong"});
+        // Hash The Password
+        const validPassword = await bcrypt.compare(req.body.password, user.password)
+        if (!validPassword) {
+            return res.status(400).send("Password is wrong")
+        }
+        //Create and assign
+        const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET)
+        res.header('auth-token', token).send({ token })
+    } catch(e){
+        res.status(500).json({error: err})
     }
-     
-    // Hash The Password
-    const validPassword = await bcrypt.compare(req.body.password, user.password)
-    if(!validPassword) {
-        return res.status(400).send("Password is wrong")
-    }
-
-    //Create and assign
-    const token = jwt.sign({id: user._id}, process.env.TOKEN_SECRET)
-    res.header('auth-token', token).send({token})
 })
 
 module.exports = router
