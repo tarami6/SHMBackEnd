@@ -18,10 +18,10 @@ app.use(express.json())
 app.use(cors()) //cors added
 
 const authRoute = require('./routes/auth');
-const htmlBuilder = require('./routes/htmlBuilder');
+const domBuilder = require('./routes/domRoute');
 
 app.use('/api/user', authRoute)
-app.use('/api/html', htmlBuilder)
+app.use('/api/dom', domBuilder)
 
 app.listen(port, () => {
     console.log('server is up and running')
