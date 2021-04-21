@@ -25,7 +25,12 @@ router.post('/save', verify, async (req, res) => {
 
     const html = new DomHtml({
         name: req.body.name,
-        dom: req.body.dom
+        dom: {
+            body: req.body.body,
+            columns: req.body.columns,
+            elements: req.body.elements,
+            rows: req.body.rows,
+        }
     })
     try {
         await html.save()

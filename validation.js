@@ -24,7 +24,7 @@ const domHtmlValidationSave = data => {
     let error = undefined
     if(!data.name){
         error =  'Name is required'
-    } else if(!data.dom){
+    } else if(!data.body.rows.length){
         error =  'Elements is required'
     }
     return error
