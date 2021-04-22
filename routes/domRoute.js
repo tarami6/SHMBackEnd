@@ -42,7 +42,7 @@ router.post('/save', verify, async (req, res) => {
 })
 
 router.put('/update/:id', verify, async (req, res) => {
-    console.log('req.body', req.params.id)
+    console.log('req.body', req.body)
     const error = domHtmlValidationUpdate(req)
     if (error) {
         return res.status(206).send(error);
@@ -52,13 +52,14 @@ router.put('/update/:id', verify, async (req, res) => {
         if (req.body.name.length && req.body.name !== file.name) {
             file.name = req.body.name
         }
-        if (req.body.dom.length && req.body.name !== file.dom) {
-            file.dom = req.body.dom
+        if (req.body) {
+            delete req.body.name
+            file.dom = req.body
         }
         file.save()
         return res.status(200).json({ message: file })
     } catch (err) {
-        rres.status(500).json({ error: err })
+        res.status(500).json({ error: err })
     }
 })
 
